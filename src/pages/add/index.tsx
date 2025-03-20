@@ -9,23 +9,23 @@ const AddPage: React.FC = () => {
 
   return (
     <AppLayout page="Add">
-      <div className="fixed left-0 w-full p-4 bg-white">
-        <div className="flex justify-between items-center">
+      <div className="fixed left-0 w-full bg-white p-4">
+        <div className="flex items-center justify-between">
           <X size={24} />
-          <div className="absolute left-1/2 transform -translate-x-1/2">
+          <div className="absolute left-1/2 -translate-x-1/2 transform">
             Add
           </div>
           <Button className="text-md" variant="link" disabled>
             Save
           </Button>
         </div>
-        <div className="flex mt-4 items-center gap-2">
+        <div className="mt-4 flex items-center gap-2">
           <h5 className="w-fit">
             With <span className="font-bold">you</span> and:{" "}
           </h5>
           <input className="" type="text" placeholder="Name Email or Tel." />
         </div>
-        <div className="fixed left-0 w-full h-[0.5px] mt-2 bg-gray-200"></div>
+        <div className="fixed left-0 mt-2 h-[0.5px] w-full bg-gray-200"></div>
       </div>
       <div className="h-[108px]"></div>
       <div className="mt-4">
