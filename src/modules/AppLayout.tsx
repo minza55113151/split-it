@@ -38,7 +38,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ page, children }) => {
     <main className="w-full h-screen">
       <div className="w-full h-full px-4">{children}</div>
       <nav className="fixed bottom-0 w-full px-2 pb-6 bg-white">
-        <div className="h-[0.5px] bg-gray-400"></div>
+        <div className="w-full absolute left-0 h-[0.5px] bg-gray-400"></div>
         <div className="flex justify-around pt-1 relative">
           {pages.map((p) => (
             <Link

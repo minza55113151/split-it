@@ -2,12 +2,15 @@ import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import React from "react";
 
-interface FriendItemProps {
+interface FriendDisplayItemProps {
   name: string;
   avatarUrl?: string;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ name, avatarUrl }) => {
+const FriendDisplayItem: React.FC<FriendDisplayItemProps> = ({
+  name,
+  avatarUrl,
+}) => {
   return (
     <div className="flex w-full items-center py-1 px-2">
       {avatarUrl ? (
@@ -31,4 +34,4 @@ const FriendItem: React.FC<FriendItemProps> = ({ name, avatarUrl }) => {
   );
 };
 
-export default FriendItem;
+export default FriendDisplayItem;
