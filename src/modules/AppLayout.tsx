@@ -13,8 +13,8 @@ const pages = [
   {
     name: "Friends",
     href: "/friends",
-    icon: <Users size={32} />,
-    iconSelected: <Users size={32} weight="fill" />,
+    icon: <Users size={24} />,
+    iconSelected: <Users size={24} weight="fill" />,
     label: "Friends",
   },
   {
@@ -27,19 +27,19 @@ const pages = [
   {
     name: "Profile",
     href: "/profile",
-    icon: <User size={32} />,
-    iconSelected: <User size={32} weight="fill" />,
+    icon: <User size={24} />,
+    iconSelected: <User size={24} weight="fill" />,
     label: "Profile",
   },
 ];
 
 const AppLayout: React.FC<AppLayoutProps> = ({ page, children }) => {
   return (
-    <main>
+    <main className="w-full h-screen">
       <div className="w-full h-full px-4">{children}</div>
-      <nav className="fixed bottom-0 w-full px-2 pb-4">
+      <nav className="fixed bottom-0 w-full px-2 pb-6 bg-white">
         <div className="h-[0.5px] bg-gray-400"></div>
-        <div className="flex justify-around pt-2 relative">
+        <div className="flex justify-around pt-1 relative">
           {pages.map((p) => (
             <Link
               className="flex flex-col justify-center items-center relative z-10"
@@ -47,7 +47,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ page, children }) => {
               href={p.href}
             >
               {page == p.name ? p.iconSelected : p.icon}
-              <p className="text-xs">{p.label}</p>
+              <p className="text-[10px]">{p.label}</p>
             </Link>
           ))}
         </div>
