@@ -5,11 +5,12 @@ import { MagnifyingGlass, UserPlus } from "@phosphor-icons/react";
 import React from "react";
 
 const FriendsPage: React.FC = () => {
-  const [friends, setFriends] = React.useState(["John Doe", "Jane Doe"]);
+  // TODO: friends
+  const friends = ["Alice", "Bob"];
 
   return (
     <AppLayout page="Friends">
-      <div className="flex w-full fixed left-0 p-4 justify-between bg-white">
+      <div className="flex w-full fixed left-0 p-4 justify-between items-center bg-white">
         <MagnifyingGlass size={24} />
         <UserPlus size={24} />
       </div>
