@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +15,7 @@ import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";
 import { Notebook, X } from "@phosphor-icons/react";
-import React, { useEffect } from "react";
+import React from "react";
 
 type FriendType = {
   name: string;
@@ -22,6 +23,9 @@ type FriendType = {
 
 const AddPage: React.FC = () => {
   const [state, setState] = React.useState<"Select" | "Input">("Select");
+
+  const [friendSearchKey, setFriendSearchKey] = React.useState<string>("");
+
   const [splitChoice, setSplitChoice] = React.useState<"equal" | "custom">(
     "equal",
   );
@@ -32,6 +36,9 @@ const AddPage: React.FC = () => {
 
   // TODO: use hook
   const friends = ["Alice", "Bob", "Charlie", "David", "Eve"];
+  const filteredFriends = friends.filter((friend) =>
+    friend.toLowerCase().includes(friendSearchKey.toLowerCase()),
+  );
 
   type ExpenseType = {
     title: string;
@@ -43,9 +50,14 @@ const AddPage: React.FC = () => {
     amount: NaN,
   });
 
-  useEffect(() => {
-    console.log(splitChoice, payer);
-  }, [splitChoice, payer]);
+  const onSaveClick = () => {
+    console.log({
+      splitChoice,
+      payer,
+      seletedFriend,
+      expenseItem,
+    });
+  };
 
   return (
     <AppLayout page="Add">
@@ -53,9 +65,14 @@ const AddPage: React.FC = () => {
         <div className="flex items-center justify-between">
           <X size={24} />
           <div className="absolute left-1/2 -translate-x-1/2 transform">
-            Add expense
+            Add Expense
           </div>
-          <Button className="text-md" variant="link" disabled>
+          <Button
+            className="text-md"
+            variant="link"
+            onClick={onSaveClick}
+            disabled={isNaN(expenseItem.amount) || expenseItem.title === ""}
+          >
             Save
           </Button>
         </div>
@@ -63,12 +80,18 @@ const AddPage: React.FC = () => {
           <h5 className="w-fit">
             With <span className="font-bold">you</span> and:{" "}
           </h5>
-          <Input
-            className=""
-            type="text"
-            placeholder="Name Email or Tel."
-            border={false}
-          />
+          {seletedFriend == null && (
+            <Input
+              className="h-6"
+              type="text"
+              placeholder="Name Email or Tel."
+              border={false}
+              value={friendSearchKey}
+              onChange={(e) => setFriendSearchKey(e.target.value)}
+            />
+          )}
+          {/* TODO: Add avatar */}
+          {seletedFriend != null && <Badge>{seletedFriend}</Badge>}
         </div>
         <Separator className="fixed left-0 mt-2" />
       </div>
@@ -77,20 +100,26 @@ const AddPage: React.FC = () => {
         <div>
           <p className="text-xs">Your friends</p>
           <div className="mt-4 flex w-full flex-col gap-2">
-            {friends.map((friend, index) => (
-              <>
-                {index !== 0 && <Separator />}
-                <button
-                  key={friend}
-                  onClick={() => {
-                    setSelectedFriend(friend);
-                    setState("Input");
-                  }}
-                >
-                  <FriendSelectItem name={friend} />
-                </button>
-              </>
-            ))}
+            {filteredFriends.length !== 0 &&
+              filteredFriends.map((friend, index) => (
+                <>
+                  {index !== 0 && <Separator />}
+                  <button
+                    key={friend}
+                    onClick={() => {
+                      setSelectedFriend(friend);
+                      setState("Input");
+                    }}
+                  >
+                    <FriendSelectItem name={friend} />
+                  </button>
+                </>
+              ))}
+            {filteredFriends.length === 0 && (
+              <div className="flex h-24 items-center justify-center">
+                <p className="text-gray-500">No friends found</p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -122,7 +151,7 @@ const AddPage: React.FC = () => {
               onChange={(e) =>
                 setExpenseItem({
                   ...expenseItem,
-                  amount: parseFloat(e.target.value),
+                  amount: parseFloat(parseFloat(e.target.value).toFixed(2)),
                 })
               }
             />
@@ -135,7 +164,18 @@ const AddPage: React.FC = () => {
                 size="sm"
                 disabled={isNaN(expenseItem.amount)}
               >
-                Split Equally
+                {payer === "you" &&
+                  splitChoice === "equal" &&
+                  "You are payer, split equally"}
+                {payer === "you" &&
+                  splitChoice === "custom" &&
+                  "You are owner full debt"}
+                {payer === "friend" &&
+                  splitChoice === "equal" &&
+                  `${seletedFriend} is payer, split equally`}
+                {payer === "friend" &&
+                  splitChoice === "custom" &&
+                  `${seletedFriend} is owner full debt`}
               </Button>
             </DialogTrigger>
             <DialogContent className="gap-2">

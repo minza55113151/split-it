@@ -20,15 +20,15 @@ const ExpenseDetails: React.FC<ExpenseDetailsProps> = ({
   let description = "";
   if (isYouPayer && splitChoice == "equal") {
     title = "You are payer, split equally";
-    description = `${friend} own you ${amount / 2}`;
+    description = `${friend} own you ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
   } else if (isYouPayer && splitChoice == "custom") {
     title = "You are owner full debt";
     description = `${friend} own you ${amount}`;
   } else if (!isYouPayer && splitChoice == "equal") {
     title = `${friend} is payer, split equally`;
-    description = `You are debt ${friend} ${amount / 2}`;
+    description = `You are debt ${friend} ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
   } else if (!isYouPayer && splitChoice == "custom") {
-    title = `${friend} are owner full debt`;
+    title = `${friend} is owner full debt`;
     description = `You are debt ${friend} ${amount}`;
   }
 
