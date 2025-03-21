@@ -1,5 +1,4 @@
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 
 interface FriendSelectItemProps {
@@ -18,7 +17,7 @@ const FriendSelectItem: React.FC<FriendSelectItemProps> = ({
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
         </Avatar>
       ) : (
-        <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-300">
+        <div className="mr-2 flex size-10 items-center justify-center rounded-full bg-gray-300">
           <span className="text-sm text-white">👤</span>
         </div>
       )}
