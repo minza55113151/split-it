@@ -1,14 +1,51 @@
-import React from "react";
-import AppLayout from "@/modules/AppLayout";
-import { Notebook, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
-import FriendSelectItem from "@/modules/friends/FriendSelectItem";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import ExpenseDetails from "@/modules/add/ExpenseDetails";
+import AppLayout from "@/modules/AppLayout";
+import FriendSelectItem from "@/modules/friends/FriendSelectItem";
+import { Notebook, X } from "@phosphor-icons/react";
+import React, { useEffect } from "react";
+
+type FriendType = {
+  name: string;
+};
 
 const AddPage: React.FC = () => {
   const [state, setState] = React.useState<"Select" | "Input">("Select");
+  const [splitChoice, setSplitChoice] = React.useState<"equal" | "custom">(
+    "equal",
+  );
+  const [payer, setPayer] = React.useState<"you" | "friend">("you");
+  const [seletedFriend, setSelectedFriend] = React.useState<string | null>(
+    null,
+  );
 
+  // TODO: use hook
   const friends = ["Alice", "Bob", "Charlie", "David", "Eve"];
+
+  type ExpenseType = {
+    title: string;
+    amount: number;
+  };
+
+  const [expenseItem, setExpenseItem] = React.useState<ExpenseType>({
+    title: "",
+    amount: NaN,
+  });
+
+  useEffect(() => {
+    console.log(splitChoice, payer);
+  }, [splitChoice, payer]);
 
   return (
     <AppLayout page="Add">
@@ -16,7 +53,7 @@ const AddPage: React.FC = () => {
         <div className="flex items-center justify-between">
           <X size={24} />
           <div className="absolute left-1/2 -translate-x-1/2 transform">
-            Add
+            Add expense
           </div>
           <Button className="text-md" variant="link" disabled>
             Save
@@ -33,17 +70,26 @@ const AddPage: React.FC = () => {
             border={false}
           />
         </div>
-        <div className="fixed left-0 mt-2 h-[0.5px] w-full bg-gray-200"></div>
+        <Separator className="fixed left-0 mt-2" />
       </div>
       <div className="mb-4 h-[108px]"></div>
       {state === "Select" && (
         <div>
           <p className="text-xs">Your friends</p>
           <div className="mt-4 flex w-full flex-col gap-2">
-            {friends.map((friend) => (
-              <button key={friend} onClick={() => setState("Input")}>
-                <FriendSelectItem name={friend} />
-              </button>
+            {friends.map((friend, index) => (
+              <>
+                {index !== 0 && <Separator />}
+                <button
+                  key={friend}
+                  onClick={() => {
+                    setSelectedFriend(friend);
+                    setState("Input");
+                  }}
+                >
+                  <FriendSelectItem name={friend} />
+                </button>
+              </>
             ))}
           </div>
         </div>
@@ -54,14 +100,102 @@ const AddPage: React.FC = () => {
             <button className="h-12 w-12 items-center justify-center rounded-md border p-1 shadow-2xs shadow-gray-600">
               <Notebook weight="bold" size={36} />
             </button>
-            <Input type="text" placeholder="Title" />
+            <Input
+              type="text"
+              placeholder="Title"
+              value={expenseItem.title}
+              onChange={(e) =>
+                setExpenseItem({ ...expenseItem, title: e.target.value })
+              }
+            />
           </div>
           <div className="flex gap-2">
             <button className="h-12 w-12 items-center justify-center rounded-md border p-1 shadow-2xs shadow-gray-600">
               <span className="text-center text-3xl font-bold">฿</span>
             </button>
-            <Input type="text" placeholder="0.00" />
+            <Input
+              type="number"
+              inputMode="decimal"
+              pattern="[0-9]*[.]?[0-9]*"
+              placeholder="0.00"
+              value={expenseItem.amount}
+              onChange={(e) =>
+                setExpenseItem({
+                  ...expenseItem,
+                  amount: parseFloat(e.target.value),
+                })
+              }
+            />
           </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className="mt-6"
+                variant="outline"
+                size="sm"
+                disabled={isNaN(expenseItem.amount)}
+              >
+                Split Equally
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="gap-2">
+              <DialogHeader>
+                <DialogTitle>Expense details</DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
+              <DialogClose asChild>
+                <ExpenseDetails
+                  isYouPayer={true}
+                  friend={seletedFriend || ""}
+                  splitChoice="equal"
+                  amount={expenseItem.amount}
+                  onClick={() => {
+                    setPayer("you");
+                    setSplitChoice("equal");
+                  }}
+                />
+              </DialogClose>
+              <Separator />
+              <DialogClose asChild>
+                <ExpenseDetails
+                  isYouPayer={true}
+                  friend={seletedFriend || ""}
+                  splitChoice="custom"
+                  amount={expenseItem.amount}
+                  onClick={() => {
+                    setPayer("you");
+                    setSplitChoice("custom");
+                  }}
+                />
+              </DialogClose>
+              <Separator />
+              <DialogClose asChild>
+                <ExpenseDetails
+                  isYouPayer={false}
+                  friend={seletedFriend || ""}
+                  splitChoice="equal"
+                  amount={expenseItem.amount}
+                  onClick={() => {
+                    setPayer("friend");
+                    setSplitChoice("equal");
+                  }}
+                />
+              </DialogClose>
+              <Separator />
+              <DialogClose asChild>
+                <ExpenseDetails
+                  isYouPayer={false}
+                  friend={seletedFriend || ""}
+                  splitChoice="custom"
+                  amount={expenseItem.amount}
+                  onClick={() => {
+                    setPayer("friend");
+                    setSplitChoice("custom");
+                  }}
+                />
+              </DialogClose>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </AppLayout>
