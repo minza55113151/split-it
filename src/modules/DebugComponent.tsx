@@ -29,8 +29,10 @@ const DebugComponent: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-0 left-0 z-50">
-      <Button onClick={copyToClipboard}>Copy token</Button>
+    <div className="fixed top-0 left-0 z-50">
+      <Button onClick={copyToClipboard} className="p-0! text-xs!">
+        Copy token
+      </Button>
     </div>
   );
 };
