@@ -11,33 +11,35 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useCreateExpense } from "@/hooks/useCreateExpense";
+import { useFriendList } from "@/hooks/UseFriendList";
+import { useUser } from "@/hooks/UseUser";
 import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";
+import { ModelsFriendResponse } from "@/modules/services/Api";
 import { Notebook, X } from "@phosphor-icons/react";
 import React from "react";
-
-type FriendType = {
-  name: string;
-};
 
 const AddPage: React.FC = () => {
   const [state, setState] = React.useState<"Select" | "Input">("Select");
 
-  const [friendSearchKey, setFriendSearchKey] = React.useState<string>("");
+  const [friendNameSearchKey, setFriendNameSearchKey] =
+    React.useState<string>("");
 
   const [splitChoice, setSplitChoice] = React.useState<"equal" | "custom">(
     "equal",
   );
   const [payer, setPayer] = React.useState<"you" | "friend">("you");
-  const [seletedFriend, setSelectedFriend] = React.useState<string | null>(
-    null,
-  );
+  const [selectedFriend, setSelectedFriend] =
+    React.useState<ModelsFriendResponse | null>(null);
 
-  // TODO: use hook
-  const friends = ["Alice", "Bob", "Charlie", "David", "Eve"];
+  const { data: user } = useUser();
+  const { data: friends = [] } = useFriendList();
+  const { mutate: createExpense } = useCreateExpense();
+
   const filteredFriends = friends.filter((friend) =>
-    friend.toLowerCase().includes(friendSearchKey.toLowerCase()),
+    friend.Name?.toLowerCase().includes(friendNameSearchKey.toLowerCase()),
   );
 
   type ExpenseType = {
@@ -51,12 +53,18 @@ const AddPage: React.FC = () => {
   });
 
   const onSaveClick = () => {
-    console.log({
-      splitChoice,
-      payer,
-      seletedFriend,
-      expenseItem,
+    createExpense({
+      Title: expenseItem.title,
+      Amount: expenseItem.amount,
+      PayerSubID: payer === "you" ? user?.SubID : selectedFriend?.SubID,
+      DebtorSubID: payer === "you" ? selectedFriend?.SubID : user?.SubID,
+      Currency: "฿",
+      Status: "unpaid",
+      Icon: "Icon",
+      Note: "",
     });
+
+    // TODO: jump to friend page
   };
 
   return (
@@ -80,18 +88,18 @@ const AddPage: React.FC = () => {
           <h5 className="w-fit">
             With <span className="font-bold">you</span> and:{" "}
           </h5>
-          {seletedFriend == null && (
+          {selectedFriend === null && (
             <Input
               className="h-6"
               type="text"
               placeholder="Name Email or Tel."
               border={false}
-              value={friendSearchKey}
-              onChange={(e) => setFriendSearchKey(e.target.value)}
+              value={friendNameSearchKey}
+              onChange={(e) => setFriendNameSearchKey(e.target.value)}
             />
           )}
           {/* TODO: Add avatar */}
-          {seletedFriend != null && <Badge>{seletedFriend}</Badge>}
+          {selectedFriend != null && <Badge>{selectedFriend.Name}</Badge>}
         </div>
         <Separator className="fixed left-0 mt-2" />
       </div>
@@ -102,18 +110,17 @@ const AddPage: React.FC = () => {
           <div className="mt-4 flex w-full flex-col gap-2">
             {filteredFriends.length !== 0 &&
               filteredFriends.map((friend, index) => (
-                <>
+                <div key={friend.SubID}>
                   {index !== 0 && <Separator />}
                   <button
-                    key={friend}
                     onClick={() => {
                       setSelectedFriend(friend);
                       setState("Input");
                     }}
                   >
-                    <FriendSelectItem name={friend} />
+                    <FriendSelectItem name={friend.Name!} />
                   </button>
-                </>
+                </div>
               ))}
             {filteredFriends.length === 0 && (
               <div className="flex h-24 items-center justify-center">
@@ -172,10 +179,10 @@ const AddPage: React.FC = () => {
                   "You are owner full debt"}
                 {payer === "friend" &&
                   splitChoice === "equal" &&
-                  `${seletedFriend} is payer, split equally`}
+                  `${selectedFriend?.Name || "Your friend"} is payer, split equally`}
                 {payer === "friend" &&
                   splitChoice === "custom" &&
-                  `${seletedFriend} is owner full debt`}
+                  `${selectedFriend?.Name || "Your friend"} is owner full debt`}
               </Button>
             </DialogTrigger>
             <DialogContent className="gap-2">
@@ -186,7 +193,7 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={true}
-                  friend={seletedFriend || ""}
+                  friend={selectedFriend?.Name || ""}
                   splitChoice="equal"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -199,7 +206,7 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={true}
-                  friend={seletedFriend || ""}
+                  friend={selectedFriend?.Name || ""}
                   splitChoice="custom"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -212,7 +219,7 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={false}
-                  friend={seletedFriend || ""}
+                  friend={selectedFriend?.Name || ""}
                   splitChoice="equal"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -225,7 +232,7 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={false}
-                  friend={seletedFriend || ""}
+                  friend={selectedFriend?.Name || ""}
                   splitChoice="custom"
                   amount={expenseItem.amount}
                   onClick={() => {

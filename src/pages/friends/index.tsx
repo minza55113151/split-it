@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { useFriendList } from "@/hooks/UseFriendList";
 import AppLayout from "@/modules/AppLayout";
 import FriendDisplayItem from "@/modules/friends/FriendDisplayItem";
 import { MagnifyingGlass, UserPlus } from "@phosphor-icons/react";
 import React from "react";
 
 const FriendsPage: React.FC = () => {
-  // TODO: friends
-  const friends = ["Alice", "Bob"];
+  const { data: friends = [], isLoading } = useFriendList();
 
   return (
     <AppLayout page="Friends">
@@ -26,9 +26,12 @@ const FriendsPage: React.FC = () => {
           </h5>
         </div>
         <div className="mt-2 flex w-full flex-col gap-2">
-          {friends.map((friend) => (
-            <FriendDisplayItem key={friend} name={friend} />
-          ))}
+          {!isLoading &&
+            friends.map((friend) => {
+              return (
+                <FriendDisplayItem key={friend.SubID} name={friend.Name!} />
+              );
+            })}
         </div>
         <Button className="mt-4" variant="outline">
           <UserPlus size={32} /> Add Friend
