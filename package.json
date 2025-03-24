@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "swagger": "npx swagger-typescript-api -p https://split-it-c4ql.onrender.com/swagger/doc.json -o ./src/modules/services -n Api.ts",
+    "swagger": "npx swagger-typescript-api -p https://split-it-c4ql.onrender.com/swagger/doc.json -o ./src/modules/services -n Api.ts --axios",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
