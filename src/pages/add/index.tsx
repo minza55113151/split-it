@@ -14,11 +14,12 @@ import { Separator } from "@/components/ui/separator";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
 import { useFriendList } from "@/hooks/UseFriendList";
 import { useUser } from "@/hooks/UseUser";
+import CurrencySelectorButtonModal from "@/modules/add/CurrencySelectorButtonModal";
 import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";
 import { ModelsFriendResponse } from "@/modules/services/Api";
-import { Notebook, X } from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react";
 import React from "react";
 
 const AddPage: React.FC = () => {
@@ -45,11 +46,13 @@ const AddPage: React.FC = () => {
   type ExpenseType = {
     title: string;
     amount: number;
+    icon: string;
   };
 
   const [expenseItem, setExpenseItem] = React.useState<ExpenseType>({
     title: "",
     amount: NaN,
+    icon: "Other",
   });
 
   const onSaveClick = () => {
@@ -60,7 +63,7 @@ const AddPage: React.FC = () => {
       DebtorSubID: payer === "you" ? selectedFriend?.SubID : user?.SubID,
       Currency: "฿",
       Status: "unpaid",
-      Icon: "Icon",
+      Icon: expenseItem.icon,
       Note: "",
     });
 
@@ -71,7 +74,14 @@ const AddPage: React.FC = () => {
     <AppLayout page="Add">
       <div className="fixed left-0 w-full bg-white p-4">
         <div className="flex items-center justify-between">
-          <X size={24} />
+          <X
+            className={state === "Select" ? "opacity-0" : ""}
+            size={24}
+            onClick={() => {
+              setState("Select");
+              setSelectedFriend(null);
+            }}
+          />
           <div className="absolute left-1/2 -translate-x-1/2 transform">
             Add Expense
           </div>
@@ -110,16 +120,19 @@ const AddPage: React.FC = () => {
           <div className="mt-4 flex w-full flex-col gap-2">
             {filteredFriends.length !== 0 &&
               filteredFriends.map((friend, index) => (
-                <div key={friend.SubID}>
+                <div
+                  key={friend.SubID}
+                  onClick={() => {
+                    setSelectedFriend(friend);
+                    setState("Input");
+                  }}
+                >
                   {index !== 0 && <Separator />}
-                  <button
-                    onClick={() => {
-                      setSelectedFriend(friend);
-                      setState("Input");
-                    }}
-                  >
-                    <FriendSelectItem name={friend.Name!} />
-                  </button>
+
+                  <FriendSelectItem
+                    name={friend.Name!}
+                    imageUrl={friend.ImageURL}
+                  />
                 </div>
               ))}
             {filteredFriends.length === 0 && (
@@ -133,9 +146,12 @@ const AddPage: React.FC = () => {
       {state === "Input" && (
         <div className="flex w-full flex-col items-center justify-between gap-4 p-12">
           <div className="flex gap-2">
-            <button className="h-12 w-12 items-center justify-center rounded-md border p-1 shadow-2xs shadow-gray-600">
-              <Notebook weight="bold" size={36} />
-            </button>
+            <CurrencySelectorButtonModal
+              iconName={expenseItem.icon}
+              onSelect={(iconName) =>
+                setExpenseItem({ ...expenseItem, icon: iconName })
+              }
+            />
             <Input
               type="text"
               placeholder="Title"
@@ -193,7 +209,9 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={true}
-                  friend={selectedFriend?.Name || ""}
+                  userImageUrl={user?.ImageURL || ""}
+                  friendName={selectedFriend?.Name || ""}
+                  friendImageUrl={selectedFriend?.ImageURL || ""}
                   splitChoice="equal"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -206,7 +224,9 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={true}
-                  friend={selectedFriend?.Name || ""}
+                  userImageUrl={user?.ImageURL || ""}
+                  friendName={selectedFriend?.Name || ""}
+                  friendImageUrl={selectedFriend?.ImageURL || ""}
                   splitChoice="custom"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -219,7 +239,9 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={false}
-                  friend={selectedFriend?.Name || ""}
+                  userImageUrl={user?.ImageURL || ""}
+                  friendName={selectedFriend?.Name || ""}
+                  friendImageUrl={selectedFriend?.ImageURL || ""}
                   splitChoice="equal"
                   amount={expenseItem.amount}
                   onClick={() => {
@@ -232,7 +254,9 @@ const AddPage: React.FC = () => {
               <DialogClose asChild>
                 <ExpenseDetails
                   isYouPayer={false}
-                  friend={selectedFriend?.Name || ""}
+                  userImageUrl={user?.ImageURL || ""}
+                  friendName={selectedFriend?.Name || ""}
+                  friendImageUrl={selectedFriend?.ImageURL || ""}
                   splitChoice="custom"
                   amount={expenseItem.amount}
                   onClick={() => {

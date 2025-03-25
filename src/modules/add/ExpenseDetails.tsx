@@ -3,7 +3,9 @@ import React from "react";
 
 type ExpenseDetailsProps = {
   isYouPayer: boolean;
-  friend: string;
+  userImageUrl: string;
+  friendName: string;
+  friendImageUrl: string;
   splitChoice: "equal" | "custom";
   amount: number;
   onClick: () => void;
@@ -11,7 +13,9 @@ type ExpenseDetailsProps = {
 
 const ExpenseDetails: React.FC<ExpenseDetailsProps> = ({
   isYouPayer,
-  friend,
+  userImageUrl,
+  friendName,
+  friendImageUrl,
   splitChoice,
   amount,
   onClick,
@@ -20,25 +24,25 @@ const ExpenseDetails: React.FC<ExpenseDetailsProps> = ({
   let description = "";
   if (isYouPayer && splitChoice == "equal") {
     title = "You are payer, split equally";
-    description = `${friend} own you ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
+    description = `${friendName} own you ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
   } else if (isYouPayer && splitChoice == "custom") {
     title = "You are owner full debt";
-    description = `${friend} own you ${amount}`;
+    description = `${friendName} own you ${amount.toFixed(2)}`;
   } else if (!isYouPayer && splitChoice == "equal") {
-    title = `${friend} is payer, split equally`;
-    description = `You are debt ${friend} ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
+    title = `${friendName} is payer, split equally`;
+    description = `You are debt ${friendName} ${(Math.ceil((amount / 2) * 100) / 100).toFixed(2)}`;
   } else if (!isYouPayer && splitChoice == "custom") {
-    title = `${friend} is owner full debt`;
-    description = `You are debt ${friend} ${amount}`;
+    title = `${friendName} is owner full debt`;
+    description = `You are debt ${friendName} ${amount.toFixed(2)}`;
   }
 
   return (
     <button className="flex gap-6" onClick={onClick}>
       <Avatar>
-        <AvatarImage src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg" />
+        <AvatarImage src={userImageUrl} />
       </Avatar>
       <Avatar className="absolute ml-6">
-        <AvatarImage src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg" />
+        <AvatarImage src={friendImageUrl} />
       </Avatar>
       <div className="ml-4 text-left font-light">
         <p>{title}</p>

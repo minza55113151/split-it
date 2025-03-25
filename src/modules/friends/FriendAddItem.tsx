@@ -1,14 +1,19 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { UserPlus, Users } from "@phosphor-icons/react";
 import React from "react";
 
-interface FriendSelectItemProps {
+interface FriendAddItemProps {
   name: string;
-  imageUrl?: string;
+  imageUrl: string;
+  isFriend: boolean;
+  onAddFriend: () => void;
 }
 
-const FriendSelectItem: React.FC<FriendSelectItemProps> = ({
+const FriendAddItem: React.FC<FriendAddItemProps> = ({
   name,
   imageUrl,
+  isFriend,
+  onAddFriend,
 }) => {
   return (
     <div className="flex w-full items-center px-2 py-1">
@@ -22,9 +27,14 @@ const FriendSelectItem: React.FC<FriendSelectItemProps> = ({
         </div>
       )}
       <h5>{name}</h5>
-      {/* <input type="checkbox" className="ml-auto" /> */}
+      {!isFriend && (
+        <button className="ml-auto" onClick={() => onAddFriend()}>
+          <UserPlus size={24} />
+        </button>
+      )}
+      {isFriend && <Users className="ml-auto" size={24} />}
     </div>
   );
 };
 
-export default FriendSelectItem;
+export default FriendAddItem;
