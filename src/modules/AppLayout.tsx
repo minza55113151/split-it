@@ -35,7 +35,7 @@ const pages = [
 
 const AppLayout: React.FC<AppLayoutProps> = ({ page, children }) => {
   return (
-    <main className="h-screen w-full">
+    <main className="w-max-[500px] h-screen">
       <div className="h-full w-full px-4">{children}</div>
       <nav className="fixed bottom-0 w-full bg-white px-2 pb-6">
         <div className="absolute left-0 h-[0.5px] w-full bg-gray-400"></div>

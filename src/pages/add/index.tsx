@@ -14,13 +14,13 @@ import { Separator } from "@/components/ui/separator";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
 import { useFriendList } from "@/hooks/UseFriendList";
 import { useUser } from "@/hooks/UseUser";
-import CurrencySelectorButtonModal from "@/modules/add/CurrencySelectorButtonModal";
 import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";
 import { ModelsFriendResponse } from "@/modules/services/Api";
 import { X } from "@phosphor-icons/react";
 import React from "react";
+import IconSelectorButtonModal from "../../modules/add/IconSelectorButtonModal";
 
 const AddPage: React.FC = () => {
   const [state, setState] = React.useState<"Select" | "Input">("Select");
@@ -146,7 +146,7 @@ const AddPage: React.FC = () => {
       {state === "Input" && (
         <div className="flex w-full flex-col items-center justify-between gap-4 p-12">
           <div className="flex gap-2">
-            <CurrencySelectorButtonModal
+            <IconSelectorButtonModal
               iconName={expenseItem.icon}
               onSelect={(iconName) =>
                 setExpenseItem({ ...expenseItem, icon: iconName })
