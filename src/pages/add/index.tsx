@@ -72,7 +72,7 @@ const AddPage: React.FC = () => {
 
   return (
     <AppLayout page="Add">
-      <div className="fixed left-0 w-full bg-white p-4">
+      <div className="fixed w-full max-w-[500px] -translate-x-4 bg-white p-4">
         <div className="flex items-center justify-between">
           <X
             className={state === "Select" ? "opacity-0" : ""}

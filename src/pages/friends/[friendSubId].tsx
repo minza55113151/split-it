@@ -14,7 +14,7 @@ const FriendSubIdPage: React.FC = () => {
 
   return (
     <AppLayout page="Friends">
-      <div className="fixed left-0 flex w-full items-center justify-between bg-white p-4">
+      <div className="fixed flex w-full max-w-[500px] -translate-x-4 items-center justify-between bg-white p-4">
         <MagnifyingGlass size={24} />
         <UserPlus size={24} />
       </div>

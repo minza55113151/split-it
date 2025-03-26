@@ -35,10 +35,10 @@ const pages = [
 
 const AppLayout: React.FC<AppLayoutProps> = ({ page, children }) => {
   return (
-    <main className="w-max-[500px] h-screen">
-      <div className="h-full w-full px-4">{children}</div>
-      <nav className="fixed bottom-0 w-full bg-white px-2 pb-6">
-        <div className="absolute left-0 h-[0.5px] w-full bg-gray-400"></div>
+    <main className="mx-auto h-screen w-full max-w-[500px]">
+      <div className="h-full w-full max-w-[500px] px-4">{children}</div>
+      <nav className="fixed bottom-0 w-full max-w-[500px] bg-white px-2 pb-6">
+        <div className="relative left-0 h-[0.5px] w-full bg-gray-400"></div>
         <div className="relative flex justify-around pt-1">
           {pages.map((p) => (
             <Link
