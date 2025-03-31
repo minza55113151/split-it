@@ -18,12 +18,20 @@ import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";
 import { ModelsFriendResponse } from "@/modules/services/Api";
-import { X } from "@phosphor-icons/react";
+import { Calculator, X } from "@phosphor-icons/react";
 import React from "react";
 import IconSelectorButtonModal from "../../modules/add/IconSelectorButtonModal";
+import CurrencySelectorButtonModal from "@/modules/add/CurrencySelectorButtonModal";
+import { useRouter } from "next/router";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import ExpenseCalculator from "@/modules/add/ExpenseCalculator";
 
 const AddPage: React.FC = () => {
-  const [state, setState] = React.useState<"Select" | "Input">("Select");
+  const router = useRouter();
+
+  const [state, setState] = React.useState<"Select" | "Input" | "Calculator">(
+    "Select",
+  );
 
   const [friendNameSearchKey, setFriendNameSearchKey] =
     React.useState<string>("");
@@ -47,12 +55,14 @@ const AddPage: React.FC = () => {
     title: string;
     amount: number;
     icon: string;
+    currency: string;
   };
 
   const [expenseItem, setExpenseItem] = React.useState<ExpenseType>({
     title: "",
     amount: NaN,
     icon: "Other",
+    currency: "฿",
   });
 
   const onSaveClick = () => {
@@ -61,13 +71,14 @@ const AddPage: React.FC = () => {
       Amount: expenseItem.amount,
       PayerSubID: payer === "you" ? user?.SubID : selectedFriend?.SubID,
       DebtorSubID: payer === "you" ? selectedFriend?.SubID : user?.SubID,
-      Currency: "฿",
+      Currency: expenseItem.currency,
+      SplitType: splitChoice,
       Status: "unpaid",
       Icon: expenseItem.icon,
       Note: "",
     });
 
-    // TODO: jump to friend page
+    router.push(`/friends/${selectedFriend?.SubID}`);
   };
 
   return (
@@ -108,8 +119,15 @@ const AddPage: React.FC = () => {
               onChange={(e) => setFriendNameSearchKey(e.target.value)}
             />
           )}
-          {/* TODO: Add avatar */}
-          {selectedFriend != null && <Badge>{selectedFriend.Name}</Badge>}
+
+          {selectedFriend != null && (
+            <Badge className="rounded-2xl pl-1">
+              <Avatar className="size-6">
+                <AvatarImage src={selectedFriend.ImageURL} />
+              </Avatar>
+              {selectedFriend.Name}
+            </Badge>
+          )}
         </div>
         <Separator className="fixed left-0 mt-2" />
       </div>
@@ -144,130 +162,148 @@ const AddPage: React.FC = () => {
         </div>
       )}
       {state === "Input" && (
-        <div className="flex w-full flex-col items-center justify-between gap-4 p-12">
-          <div className="flex gap-2">
-            <IconSelectorButtonModal
-              iconName={expenseItem.icon}
-              onSelect={(iconName) =>
-                setExpenseItem({ ...expenseItem, icon: iconName })
-              }
-            />
-            <Input
-              type="text"
-              placeholder="Title"
-              value={expenseItem.title}
-              onChange={(e) =>
-                setExpenseItem({ ...expenseItem, title: e.target.value })
-              }
-            />
+        <>
+          <div className="flex">
+            <Button className="ml-auto" onClick={() => setState("Calculator")}>
+              <Calculator size={36} />
+            </Button>
           </div>
-          <div className="flex gap-2">
-            <button className="h-12 w-12 items-center justify-center rounded-md border p-1 shadow-2xs shadow-gray-600">
-              <span className="text-center text-3xl font-bold">฿</span>
-            </button>
-            <Input
-              type="number"
-              inputMode="decimal"
-              pattern="[0-9]*[.]?[0-9]*"
-              placeholder="0.00"
-              value={expenseItem.amount}
-              onChange={(e) =>
-                setExpenseItem({
-                  ...expenseItem,
-                  amount: parseFloat(parseFloat(e.target.value).toFixed(2)),
-                })
-              }
-            />
+          <div className="flex w-full flex-col items-center justify-between gap-4 p-12">
+            <div className="flex gap-2">
+              <IconSelectorButtonModal
+                iconName={expenseItem.icon}
+                onSelect={(iconName) =>
+                  setExpenseItem({ ...expenseItem, icon: iconName })
+                }
+              />
+              <Input
+                type="text"
+                placeholder="Title"
+                value={expenseItem.title}
+                onChange={(e) =>
+                  setExpenseItem({ ...expenseItem, title: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex gap-2">
+              <CurrencySelectorButtonModal
+                currency={expenseItem.currency}
+                onSelect={(currency) =>
+                  setExpenseItem({ ...expenseItem, currency })
+                }
+              />
+              <Input
+                type="number"
+                inputMode="decimal"
+                pattern="[0-9]*[.]?[0-9]*"
+                placeholder="0.00"
+                value={expenseItem.amount}
+                onChange={(e) =>
+                  setExpenseItem({
+                    ...expenseItem,
+                    amount: parseFloat(parseFloat(e.target.value).toFixed(2)),
+                  })
+                }
+              />
+            </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  className="mt-6"
+                  variant="outline"
+                  size="sm"
+                  disabled={isNaN(expenseItem.amount)}
+                >
+                  {payer === "you" &&
+                    splitChoice === "equal" &&
+                    "You are payer, split equally"}
+                  {payer === "you" &&
+                    splitChoice === "custom" &&
+                    "You are owner full debt"}
+                  {payer === "friend" &&
+                    splitChoice === "equal" &&
+                    `${selectedFriend?.Name || "Your friend"} is payer, split equally`}
+                  {payer === "friend" &&
+                    splitChoice === "custom" &&
+                    `${selectedFriend?.Name || "Your friend"} is owner full debt`}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="gap-2">
+                <DialogHeader>
+                  <DialogTitle>Expense details</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <DialogClose asChild>
+                  <ExpenseDetails
+                    isYouPayer={true}
+                    userImageUrl={user?.ImageURL || ""}
+                    friendName={selectedFriend?.Name || ""}
+                    friendImageUrl={selectedFriend?.ImageURL || ""}
+                    splitChoice="equal"
+                    amount={expenseItem.amount}
+                    onClick={() => {
+                      setPayer("you");
+                      setSplitChoice("equal");
+                    }}
+                  />
+                </DialogClose>
+                <Separator />
+                <DialogClose asChild>
+                  <ExpenseDetails
+                    isYouPayer={true}
+                    userImageUrl={user?.ImageURL || ""}
+                    friendName={selectedFriend?.Name || ""}
+                    friendImageUrl={selectedFriend?.ImageURL || ""}
+                    splitChoice="custom"
+                    amount={expenseItem.amount}
+                    onClick={() => {
+                      setPayer("you");
+                      setSplitChoice("custom");
+                    }}
+                  />
+                </DialogClose>
+                <Separator />
+                <DialogClose asChild>
+                  <ExpenseDetails
+                    isYouPayer={false}
+                    userImageUrl={user?.ImageURL || ""}
+                    friendName={selectedFriend?.Name || ""}
+                    friendImageUrl={selectedFriend?.ImageURL || ""}
+                    splitChoice="equal"
+                    amount={expenseItem.amount}
+                    onClick={() => {
+                      setPayer("friend");
+                      setSplitChoice("equal");
+                    }}
+                  />
+                </DialogClose>
+                <Separator />
+                <DialogClose asChild>
+                  <ExpenseDetails
+                    isYouPayer={false}
+                    userImageUrl={user?.ImageURL || ""}
+                    friendName={selectedFriend?.Name || ""}
+                    friendImageUrl={selectedFriend?.ImageURL || ""}
+                    splitChoice="custom"
+                    amount={expenseItem.amount}
+                    onClick={() => {
+                      setPayer("friend");
+                      setSplitChoice("custom");
+                    }}
+                  />
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="mt-6"
-                variant="outline"
-                size="sm"
-                disabled={isNaN(expenseItem.amount)}
-              >
-                {payer === "you" &&
-                  splitChoice === "equal" &&
-                  "You are payer, split equally"}
-                {payer === "you" &&
-                  splitChoice === "custom" &&
-                  "You are owner full debt"}
-                {payer === "friend" &&
-                  splitChoice === "equal" &&
-                  `${selectedFriend?.Name || "Your friend"} is payer, split equally`}
-                {payer === "friend" &&
-                  splitChoice === "custom" &&
-                  `${selectedFriend?.Name || "Your friend"} is owner full debt`}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="gap-2">
-              <DialogHeader>
-                <DialogTitle>Expense details</DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              <DialogClose asChild>
-                <ExpenseDetails
-                  isYouPayer={true}
-                  userImageUrl={user?.ImageURL || ""}
-                  friendName={selectedFriend?.Name || ""}
-                  friendImageUrl={selectedFriend?.ImageURL || ""}
-                  splitChoice="equal"
-                  amount={expenseItem.amount}
-                  onClick={() => {
-                    setPayer("you");
-                    setSplitChoice("equal");
-                  }}
-                />
-              </DialogClose>
-              <Separator />
-              <DialogClose asChild>
-                <ExpenseDetails
-                  isYouPayer={true}
-                  userImageUrl={user?.ImageURL || ""}
-                  friendName={selectedFriend?.Name || ""}
-                  friendImageUrl={selectedFriend?.ImageURL || ""}
-                  splitChoice="custom"
-                  amount={expenseItem.amount}
-                  onClick={() => {
-                    setPayer("you");
-                    setSplitChoice("custom");
-                  }}
-                />
-              </DialogClose>
-              <Separator />
-              <DialogClose asChild>
-                <ExpenseDetails
-                  isYouPayer={false}
-                  userImageUrl={user?.ImageURL || ""}
-                  friendName={selectedFriend?.Name || ""}
-                  friendImageUrl={selectedFriend?.ImageURL || ""}
-                  splitChoice="equal"
-                  amount={expenseItem.amount}
-                  onClick={() => {
-                    setPayer("friend");
-                    setSplitChoice("equal");
-                  }}
-                />
-              </DialogClose>
-              <Separator />
-              <DialogClose asChild>
-                <ExpenseDetails
-                  isYouPayer={false}
-                  userImageUrl={user?.ImageURL || ""}
-                  friendName={selectedFriend?.Name || ""}
-                  friendImageUrl={selectedFriend?.ImageURL || ""}
-                  splitChoice="custom"
-                  amount={expenseItem.amount}
-                  onClick={() => {
-                    setPayer("friend");
-                    setSplitChoice("custom");
-                  }}
-                />
-              </DialogClose>
-            </DialogContent>
-          </Dialog>
-        </div>
+        </>
+      )}
+      {state === "Calculator" && (
+        <ExpenseCalculator
+          onBackClick={() => setState("Input")}
+          setValue={(value) => {
+            setExpenseItem({ ...expenseItem, amount: value });
+          }}
+        />
       )}
     </AppLayout>
   );
