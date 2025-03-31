@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useExpenseList } from "@/hooks/useExpenseList";
-import { useFriendList } from "@/hooks/UseFriendList";
+import { useFriendList } from "@/hooks/seFriendList";
 import AppLayout from "@/modules/AppLayout";
 import AddFriendModal from "@/modules/friends/AddFriendModal";
 import FriendDisplayItem from "@/modules/friends/FriendDisplayItem";
