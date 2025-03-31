@@ -14,9 +14,10 @@ export interface ModelsExpense {
   Currency?: string;
   DebtorSubID?: string;
   Icon?: string;
-  Id?: number;
+  ID?: number;
   Note?: string;
   PayerSubID?: string;
+  SplitType?: string;
   Status?: string;
   Title?: string;
   UpdatedAt?: string;
@@ -25,7 +26,7 @@ export interface ModelsExpense {
 export interface ModelsFriendResponse {
   CreatedAt?: string;
   Email?: string;
-  Id?: number;
+  ID?: number;
   ImageURL?: string;
   Name?: string;
   Status?: string;
@@ -36,7 +37,7 @@ export interface ModelsFriendResponse {
 export interface ModelsUser {
   CreatedAt?: string;
   Email?: string;
-  Id?: number;
+  ID?: number;
   ImageURL?: string;
   Name?: string;
   SubID?: string;
@@ -389,6 +390,26 @@ export class Api<
       this.request<ModelsUser, string>({
         path: `/users`,
         method: "GET",
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Update a user
+     *
+     * @tags users
+     * @name UsersUpdate
+     * @summary Update a user
+     * @request PUT:/users
+     * @secure
+     */
+    usersUpdate: (user: ModelsUser, params: RequestParams = {}) =>
+      this.request<ModelsUser, string>({
+        path: `/users`,
+        method: "PUT",
+        body: user,
         secure: true,
         type: ContentType.Json,
         format: "json",
