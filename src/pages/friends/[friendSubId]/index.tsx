@@ -78,7 +78,7 @@ const FriendSubIdPage: React.FC = () => {
               className="w-full"
               key={expense.ID}
               onClick={() => {
-                router.push(`/friends/${friendSubId}/expenses/${expense.ID}`);
+                // router.push(`/friends/${friendSubId}/expenses/${expense.ID}`);
               }}
             >
               <FriendExpenseItem
