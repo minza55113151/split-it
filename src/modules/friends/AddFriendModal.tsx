@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useAddFriend } from "@/hooks/seAddFriend";
-import { useFriendList } from "@/hooks/seFriendList";
+import { useAddFriend } from "@/hooks/useAddFriend";
+import { useFriendList } from "@/hooks/useFriendList";
 import { useUserListByName } from "@/hooks/useUserListByName";
 import React, { useState } from "react";
 import FriendAddItem from "./FriendAddItem";
-import { useUser } from "@/hooks/seUser";
+import { useUser } from "@/hooks/useUser";
 
 interface AddFriendProps {
   isOpen: boolean;

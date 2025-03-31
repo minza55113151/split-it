@@ -1,8 +1,8 @@
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import apiInstance from "../services/myApi";
-import { useUser } from "@/hooks/seUser";
-import { useUserRegister } from "@/hooks/seUserRegister";
+import { useUser } from "@/hooks/useUser";
+import { useUserRegister } from "@/hooks/useUserRegister";
 
 const AuthProvider = () => {
   const [token, setToken] = useState<string>("");

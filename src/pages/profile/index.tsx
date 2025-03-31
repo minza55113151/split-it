@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useUpdateUser } from "@/hooks/useUpdateUser";
-import { useUser } from "@/hooks/seUser";
+import { useUser } from "@/hooks/useUser";
 import AppLayout from "@/modules/AppLayout";
 import DebugComponent from "@/modules/DebugComponent";
 import { UserButton } from "@clerk/nextjs";

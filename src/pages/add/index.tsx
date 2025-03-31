@@ -12,8 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
-import { useFriendList } from "@/hooks/seFriendList";
-import { useUser } from "@/hooks/seUser";
+import { useFriendList } from "@/hooks/useFriendList";
+import { useUser } from "@/hooks/useUser";
 import ExpenseDetails from "@/modules/add/ExpenseDetails";
 import AppLayout from "@/modules/AppLayout";
 import FriendSelectItem from "@/modules/friends/FriendSelectItem";

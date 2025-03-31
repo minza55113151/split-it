@@ -1,8 +1,8 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useFriendExpenseList } from "@/hooks/useFriendExpense";
-import { useFriendList } from "@/hooks/seFriendList";
-import { useUser } from "@/hooks/seUser";
+import { useFriendList } from "@/hooks/useFriendList";
+import { useUser } from "@/hooks/useUser";
 import AppLayout from "@/modules/AppLayout";
 import FriendExpenseItem from "@/modules/friends/FriendExpenseItem";
 import { CaretLeft, Gear } from "@phosphor-icons/react";
