@@ -46,7 +46,7 @@ const ExpenseDetails: React.FC<ExpenseDetailsProps> = ({
       </Avatar>
       <div className="ml-4 text-left font-light">
         <p>{title}</p>
-        <p className={isYouPayer ? "text-green-600" : "text-red-600"}>
+        <p className={isYouPayer ? "text-green-500" : "text-orange-500"}>
           {description}
         </p>
       </div>
