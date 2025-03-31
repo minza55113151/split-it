@@ -33,7 +33,7 @@ const SettlePage: React.FC = () => {
   const friend = friendList?.find((f) => f.SubID === friendSubId);
 
   const userDebt = expenseList.reduce((acc, expense) => {
-    const amount = expense.Amount! / (expense.SplitType === "custom" ? 1 : 2);
+    const amount = expense.Amount! / (expense.SplitType === "equal" ? 2 : 1);
     if (expense.PayerSubID === user?.SubID) {
       return acc - amount;
     }

@@ -25,7 +25,7 @@ const FriendSubIdPage: React.FC = () => {
   const friend = friendList?.find((f) => f.SubID === friendSubId);
 
   const userDebt = expenseList.reduce((acc, expense) => {
-    const amount = expense.Amount! / (expense.SplitType === "custom" ? 1 : 2);
+    const amount = expense.Amount! / (expense.SplitType === "equal" ? 2 : 1);
     if (expense.PayerSubID === user?.SubID) {
       return acc - amount;
     }
@@ -89,7 +89,7 @@ const FriendSubIdPage: React.FC = () => {
                 isFriendDebtor={expense.PayerSubID === user?.SubID}
                 amount={expense.Amount!}
                 debtAmount={
-                  expense.Amount! / (expense.SplitType === "custom" ? 1 : 2)
+                  expense.Amount! / (expense.SplitType === "equal" ? 2 : 1)
                 }
               />
             </button>
