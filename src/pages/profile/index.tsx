@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUpdateUser } from "@/hooks/useUpdateUser";
 import { useUser } from "@/hooks/UseUser";
 import AppLayout from "@/modules/AppLayout";
+import DebugComponent from "@/modules/DebugComponent";
 import { UserButton } from "@clerk/nextjs";
 import { Check, PencilSimple } from "@phosphor-icons/react";
 import React, { useEffect } from "react";
@@ -70,6 +71,7 @@ const ProfilePage: React.FC = () => {
           </Button>
         </div>
         <Separator />
+        <DebugComponent />
       </div>
     </AppLayout>
   );

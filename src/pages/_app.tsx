@@ -1,11 +1,10 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import type { AppProps } from "next/app";
-import "../styles/globals.css";
-import DebugComponent from "@/modules/DebugComponent";
+import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/modules/auth/AuthProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
-import { Toaster } from "@/components/ui/sonner";
+import type { AppProps } from "next/app";
+import "../styles/globals.css";
 
 export const queryClient = new QueryClient();
 
@@ -14,7 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ClerkProvider>
       <QueryClientProvider client={queryClient}>
         <>
-          <DebugComponent />
           <AuthProvider />
           <Analytics />
           <Component {...pageProps} />
