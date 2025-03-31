@@ -30,15 +30,12 @@ const FriendsPage: React.FC = () => {
           return acc;
         }
 
-        if (expense.PayerSubID === friend.SubID) {
-          return acc - expense.Amount!;
-        }
-
+        const amount =
+          expense.Amount! / (expense.SplitType === "custom" ? 1 : 2);
         if (expense.DebtorSubID === friend.SubID) {
-          return acc + expense.Amount!;
+          return acc - amount;
         }
-
-        return acc;
+        return acc + amount;
       }, 0);
       return acc;
     },

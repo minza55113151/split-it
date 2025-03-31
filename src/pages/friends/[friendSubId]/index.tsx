@@ -8,6 +8,7 @@ import FriendExpenseItem from "@/modules/friends/FriendExpenseItem";
 import { CaretLeft, Gear } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "sonner";
 
 const FriendSubIdPage: React.FC = () => {
   const router = useRouter();
@@ -24,18 +25,19 @@ const FriendSubIdPage: React.FC = () => {
   const friend = friendList?.find((f) => f.SubID === friendSubId);
 
   const userDebt = expenseList.reduce((acc, expense) => {
+    const amount = expense.Amount! / (expense.SplitType === "custom" ? 1 : 2);
     if (expense.PayerSubID === user?.SubID) {
-      return acc - expense.Amount!;
+      return acc - amount;
     }
-    return acc + expense.Amount!;
+    return acc + amount;
   }, 0);
   const reversedExpenseList = expenseList.reverse();
 
   return (
     <AppLayout page="Friends">
       <div className="fixed flex w-full max-w-[500px] -translate-x-4 items-center justify-between bg-white p-4">
-        <CaretLeft size={24} />
-        <Gear size={24} />
+        <CaretLeft size={24} onClick={() => router.back()} />
+        <Gear size={24} onClick={() => toast("FRIEND SETTING")} />
       </div>
       <div className="h-[56px]"></div>
       <div>
@@ -86,7 +88,9 @@ const FriendSubIdPage: React.FC = () => {
                 friendName={friend?.Name || ""}
                 isFriendDebtor={expense.PayerSubID === user?.SubID}
                 amount={expense.Amount!}
-                debtAmount={expense.Amount!}
+                debtAmount={
+                  expense.Amount! / (expense.SplitType === "custom" ? 1 : 2)
+                }
               />
             </button>
           ))}
