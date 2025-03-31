@@ -169,7 +169,7 @@ const AddPage: React.FC = () => {
             </Button>
           </div>
           <div className="flex w-full flex-col items-center justify-between gap-4 p-12">
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <IconSelectorButtonModal
                 iconName={expenseItem.icon}
                 onSelect={(iconName) =>
@@ -185,7 +185,7 @@ const AddPage: React.FC = () => {
                 }
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <CurrencySelectorButtonModal
                 currency={expenseItem.currency}
                 onSelect={(currency) =>
