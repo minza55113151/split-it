@@ -77,7 +77,7 @@ const SettlePage: React.FC = () => {
     <AppLayout page="Friends">
       <div className="fixed flex w-full max-w-[500px] -translate-x-4 items-center justify-between bg-white p-4">
         <div className="flex w-full justify-between">
-          <X size={24} onClick={() => router.back()} />
+          <X size={24} onClick={() => router.push(`/friends/${friendSubId}`)} />
           <Button
             variant="link"
             disabled={settleItem.amount <= 0}

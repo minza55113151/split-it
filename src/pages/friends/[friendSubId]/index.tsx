@@ -36,7 +36,7 @@ const FriendSubIdPage: React.FC = () => {
   return (
     <AppLayout page="Friends">
       <div className="fixed flex w-full max-w-[500px] -translate-x-4 items-center justify-between bg-white p-4">
-        <CaretLeft size={24} onClick={() => router.back()} />
+        <CaretLeft size={24} onClick={() => router.push("/friends")} />
         <Gear size={24} onClick={() => toast("FRIEND SETTING")} />
       </div>
       <div className="h-[56px]"></div>
@@ -78,7 +78,7 @@ const FriendSubIdPage: React.FC = () => {
               className="w-full"
               key={expense.ID}
               onClick={() => {
-                // router.push(`/friends/${friendSubId}/expenses/${expense.ID}`);
+                router.push(`/friends/${friendSubId}/expenses/${expense.ID}`);
               }}
             >
               <FriendExpenseItem
