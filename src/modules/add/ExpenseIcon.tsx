@@ -1,33 +1,60 @@
-import { CarProfile, Notepad } from "@phosphor-icons/react";
+import { CarProfile, Money, Notepad } from "@phosphor-icons/react";
 import { ForkKnife } from "lucide-react";
 import React from "react";
 
-export const iconList = [
+const _iconList = [
   {
     label: "Food",
     iconName: "Food",
-    icon: <ForkKnife size={36} />,
+    icon: (
+      <div className="flex size-9 items-center justify-center">
+        <ForkKnife size={32} />
+      </div>
+    ),
   },
   {
     label: "Transport",
     iconName: "Transport",
-    icon: <CarProfile size={36} />,
+    icon: (
+      <div className="flex size-9 items-center justify-center">
+        <CarProfile size={32} />
+      </div>
+    ),
   },
   {
     label: "Other",
     iconName: "Other",
-    icon: <Notepad size={36} />,
+    icon: (
+      <div className="flex size-9 items-center justify-center">
+        <Notepad size={32} />
+      </div>
+    ),
+  },
+  {
+    label: "Settle",
+    iconName: "Settle",
+    icon: (
+      <div className="flex size-9 items-center justify-center">
+        <Money size={32} />
+      </div>
+    ),
   },
 ];
+
+const privateIconList = ["Settle"];
+
+export const iconList = _iconList.filter((icon) => {
+  return !privateIconList.includes(icon.iconName);
+});
 
 type ExpenseIconProps = {
   iconName: string;
 };
 
 const ExpenseIcon: React.FC<ExpenseIconProps> = ({ iconName }) => {
-  let icon = iconList.find((icon) => icon.iconName === iconName)?.icon;
+  let icon = _iconList.find((icon) => icon.iconName === iconName)?.icon;
   if (!icon) {
-    icon = iconList.find((icon) => icon.iconName === "Other")!.icon;
+    icon = _iconList.find((icon) => icon.iconName === "Other")!.icon;
   }
 
   return <div className="flex items-center justify-center">{icon}</div>;
