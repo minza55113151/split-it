@@ -58,13 +58,13 @@ const FriendsPage: React.FC = () => {
           {userDebt < 0 && (
             <h5>
               You are in debt{" "}
-              <span className="text-orange-500">฿{userDebt}</span>
+              <span className="text-orange-500">฿{Math.abs(userDebt)}</span>
             </h5>
           )}
           {userDebt > 0 && (
             <h5>
               Your friends owe you{" "}
-              <span className="text-green-500">฿{Math.abs(userDebt)}</span>
+              <span className="text-green-500">฿{userDebt}</span>
             </h5>
           )}
           {userDebt === 0 && <h5>You are all settled up</h5>}
